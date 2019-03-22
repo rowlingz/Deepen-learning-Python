@@ -17,8 +17,13 @@ def GetUglyNumber_Solution(index):
     # 为2，3，5创建倍数索引，
     i_2, i_3, i_5 = 0, 0, 0
     for i in range(1, index):
+
+        # 下一个丑数来源于未加入的2， 3，5倍数值的最小值
         new_ugly = min([ugly_lists[i_2] * 2, ugly_lists[i_3] * 3, ugly_lists[i_5] * 5])
         ugly_lists.append(new_ugly)
+
+        # 找到最小值来源于2， 3， 5中的哪个倍数值，对应索引值＋1，
+        # 这里要注意2*3，3*2这类存在相同的值，因此需要逐一验证，不可直接跳出循环。
         if ugly_lists[i] == ugly_lists[i_2] * 2:
             i_2 += 1
         if ugly_lists[i] == ugly_lists[i_3] * 3:
