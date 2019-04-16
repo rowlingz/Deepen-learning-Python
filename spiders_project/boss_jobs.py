@@ -4,6 +4,7 @@
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ChromeOptions
 import json, csv
 import time
 import random
@@ -67,7 +68,13 @@ def main(job_name):
     with open('boss_cookies.json', 'r') as file:
         data = file.read()
         cookies = json.loads(data)
-    browser = webdriver.Chrome()
+
+    # 避免被识别出为模拟浏览器
+    options = ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-automation'])
+    options.add_argument('--headless')
+    browser = webdriver.Chrome(options=options)
+
     browser.get('https://www.zhipin.com/')
     for i in cookies:
         browser.add_cookie(i)
