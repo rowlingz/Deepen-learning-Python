@@ -185,10 +185,10 @@ def run(store_dicts, start_date, end_date):
 
 
 if __name__ == "__main__":
+    my_shop = {'50025705': 'sovya索薇娅旗舰店'}
     store_dicts = {
-        '50025705': '旗舰店',
         '2962070462': '阿道夫梦卓专卖店',
-        '217101303': '徽歌旗舰店'
+        '217101303': '宝洁官方旗舰店'
     }
     start_date, end_date = '20190501', '20190515'
     run(store_dicts, start_date, end_date)
