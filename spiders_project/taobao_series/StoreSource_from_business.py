@@ -122,32 +122,23 @@ def get_datas(browser, source_name, timepoint):
     return total_datas
 
 
-if __name__ == "__main__":
-    store_dics = {
-        '2962070462': '阿道夫梦卓专卖店',
-        '217101303': '徽歌旗舰店'
-    }
-
-    time_list = list(map(lambda x: x.strftime("%Y-%m-%d"), pd.date_range('20190501', '20190515')))
-
-    login_url = "https://sycm.taobao.com/custom/login.htm"
-
-    # 建立连接并登录
-    browser = bulid_link(login_url)
-
-    store_id = list(store_dics.keys())
-    # 解析指定id的数据
-    rivalUser1Id = store_id.pop(0)
-    rivalUser1name = store_dics[rivalUser1Id]
-    rivalUser2Id = store_id.pop(0)
-    rivalUser2name = store_dics[rivalUser2Id]
+def specific_run(browser, test_dicts, time_list):
+    # 获取指定店铺的数据
+    rivalUser1Id = test_dicts.pop(0)
+    rivalUser1name = test_dicts[rivalUser1Id]
+    try:
+        rivalUser2Id = test_dicts.pop(0)
+        rivalUser2name = test_dicts[rivalUser2Id]
+    except IndexError:
+        rivalUser2Id = None
+        rivalUser2name = ''
 
     filename = 'data_' + rivalUser1name + '_' + rivalUser2name + '.csv'
     csv_header = [['序号', '流量来源', 'sovya索薇娅旗舰店', rivalUser1name, rivalUser2name, 'date_time', 'kinds']]
     header_col = DataFrame(csv_header)
     header_col.to_csv(filename, header=False, encoding='utf_8_sig', index=False)
 
-    for timepoint in time_list[:3]:
+    for timepoint in time_list:
         item_url = combin_url(timepoint, rivalUser1Id, rivalUser2Id)
         wait_refresh(browser, item_url)
 
@@ -171,4 +162,35 @@ if __name__ == "__main__":
             # 数据追加
             data_df.to_csv(filename, mode='a', header=False, encoding='utf_8_sig')
             print("数据追加完成")
+
+
+def run(store_dicts, start_date, end_date):
+    time_list = list(map(lambda x: x.strftime("%Y-%m-%d"), pd.date_range(start_date, end_date)))
+
+    login_url = "https://sycm.taobao.com/custom/login.htm"
+
+    # 建立连接并登录
+    browser = bulid_link(login_url)
+    store_id = list(store_dicts.keys())
+    while store_id:
+        try:
+            rivalUser1Id = store_id.pop(0)
+            rivalUser2Id = store_id.pop(0)
+            test_id = [rivalUser1Id, rivalUser2Id]
+        except IndexError:
+            rivalUser1Id = store_id.pop(0)
+            test_id = [rivalUser1Id]
+        test_dicts = {key: value for key, value in store_dicts.items() if key in test_id}
+        specific_run(browser, test_dicts, time_list)
+
+
+if __name__ == "__main__":
+    store_dicts = {
+        '50025705': '旗舰店',
+        '2962070462': '阿道夫梦卓专卖店',
+        '217101303': '徽歌旗舰店'
+    }
+    start_date, end_date = '20190501', '20190515'
+    run(store_dicts, start_date, end_date)
+    print('end')
 
