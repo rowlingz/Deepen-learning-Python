@@ -42,8 +42,8 @@ class Solution:
                 j -= 1
 
         print(results)
-        df = pd.DataFrame(results)
-        print(df)
+        # df = pd.DataFrame(results)
+        # print(df)
 
         data_sum = []
         previous = 0
