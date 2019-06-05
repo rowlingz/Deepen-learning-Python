@@ -85,6 +85,22 @@ class Solution:
                 p.next = head
         return new.next
 
+    def deleteNode(self, node):
+        # 请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。
+
+        # 执行用时 : 56 ms, 在Delete Node in a Linked List的Python3提交中击败了95.02% 的用户
+        # 内存消耗 : 13.3 MB, 在Delete Node in a Linked List的Python3提交中击败了98.10% 的用户
+
+        # 思路：因为不知道前一个结点，就将该结点的值改为下一个结点的值，然后再进行跳过，跳至尾节点时，next设置为Node
+        current = node
+        p = current.next
+        while p.next:
+            current.val = p.val
+            current = current.next
+            p = p.next
+        current.val = p.val
+        current.next = None
+
 
 if __name__ == '__main__':
     l1 = ListNode(1, ListNode(7, ListNode(8)))
